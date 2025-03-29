@@ -31,15 +31,27 @@ const App = () => (
           <Route path="/" element={<LandingPage />} />
           <Route 
             path="/dashboard" 
-            element={<Index />} 
+            element={
+              <MainLayout>
+                <Index />
+              </MainLayout>
+            } 
           />
           <Route 
             path="/login" 
-            element={<Login />} 
+            element={
+              <MainLayout>
+                <Login />
+              </MainLayout>
+            } 
           />
           <Route 
             path="/register" 
-            element={<Register />} 
+            element={
+              <MainLayout>
+                <Register />
+              </MainLayout>
+            } 
           />
           <Route 
             path="/leaderboard" 
@@ -75,7 +87,11 @@ const App = () => (
             } 
           />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={
+            <MainLayout>
+              <NotFound />
+            </MainLayout>
+          } />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
