@@ -42,8 +42,7 @@ const CodeQuestHeader = () => {
           </Link>
         </div>
 
-        <Navigation />
-        {isMobile && <Navigation />}
+        <Navigation isMenuOpen={isMenuOpen} />
 
         <div className="flex items-center gap-2">
           <DropdownMenu>
@@ -103,6 +102,7 @@ const CodeQuestHeader = () => {
           </DropdownMenu>
         </div>
       </div>
+      {isMobile && <Navigation isMenuOpen={isMenuOpen} />}
     </header>
   );
 };
