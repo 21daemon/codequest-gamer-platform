@@ -23,6 +23,9 @@ const App = () => (
           <Route path="/dashboard" element={<Index />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/leaderboard" element={<Index />} /> {/* Placeholder, same component for now */}
+          <Route path="/community" element={<Index />} /> {/* Placeholder, same component for now */}
+          <Route path="/resources" element={<Index />} /> {/* Placeholder, same component for now */}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

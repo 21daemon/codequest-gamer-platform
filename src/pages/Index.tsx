@@ -38,7 +38,7 @@ const Index = () => {
       xpReward: 50,
       completed: true,
       locked: false,
-      language: "javascript",
+      language: "JavaScript",
     },
     {
       id: 2,
@@ -48,7 +48,7 @@ const Index = () => {
       xpReward: 75,
       completed: true,
       locked: false,
-      language: "javascript",
+      language: "JavaScript",
     },
     {
       id: 3,
@@ -58,7 +58,7 @@ const Index = () => {
       xpReward: 150,
       completed: false,
       locked: false,
-      language: "javascript",
+      language: "JavaScript",
     },
     {
       id: 4,
@@ -68,7 +68,7 @@ const Index = () => {
       xpReward: 200,
       completed: false,
       locked: false,
-      language: "react",
+      language: "React",
     },
     {
       id: 5,
@@ -78,7 +78,7 @@ const Index = () => {
       xpReward: 250,
       completed: false,
       locked: true,
-      language: "react",
+      language: "React",
     },
   ];
 
@@ -147,6 +147,16 @@ const Index = () => {
       ]
     },
   ];
+
+  // Fixed code editor default value
+  const codeEditorDefaultValue = `// Welcome to the CodeQuest Playground!
+// Start typing your code here...
+
+function greetUser(name) {
+  return \`Hello, \${name}! Welcome to CodeQuest.\`;
+}
+
+console.log(greetUser("Coder"));`;
 
   return (
     <div className="min-h-screen bg-dark-gradient text-foreground">
@@ -274,14 +284,10 @@ const Index = () => {
           
           <TabsContent value="playground" className="mt-6">
             <div className="quest-card p-0 overflow-hidden">
-              <CodeEditor height="400px" language="javascript" defaultValue={`// Welcome to the CodeQuest Playground!
-// Start typing your code here...
-
-function greetUser(name) {
-  return \`Hello, \${name}! Welcome to CodeQuest.\`;
-}
-
-console.log(greetUser("Coder"));`} />
+              <CodeEditor 
+                defaultValue={codeEditorDefaultValue} 
+                language="javascript" 
+              />
             </div>
           </TabsContent>
         </Tabs>
