@@ -62,7 +62,7 @@ const ChallengeCard = ({
         <div>
           <h3 className="text-lg font-bold mb-2">{title}</h3>
           <Badge className={difficultyColor[difficulty]}>{difficulty}</Badge>
-          <Badge className={languageColors[language] || "bg-gray-500"} variant="outline" className="ml-2">
+          <Badge variant="outline" className={cn("ml-2", languageColors[language] || "bg-gray-500")}>
             {language}
           </Badge>
         </div>

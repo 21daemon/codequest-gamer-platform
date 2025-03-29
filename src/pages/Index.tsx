@@ -3,15 +3,15 @@ import { useState } from "react";
 import CodeQuestHeader from "@/components/CodeQuestHeader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ProgressBar from "@/components/ProgressBar";
-import { BadgeCheck, Code, CodeXml, Terminal, Trophy, Clock, BookOpen, Zap, FileBadge, PuzzlePiece } from "lucide-react";
+import { BadgeCheck, Code, CodeXml, Terminal, Trophy, Clock, BookOpen, Zap, FileBadge } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChallengeCard } from "@/components/ChallengeCard";
-import { AchievementBadge } from "@/components/AchievementBadge";
-import { LearningPath } from "@/components/LearningPath";
-import { CodeEditor } from "@/components/CodeEditor";
-import { PlayerStats } from "@/components/PlayerStats";
+import ChallengeCard from "@/components/ChallengeCard";
+import AchievementBadge from "@/components/AchievementBadge";
+import LearningPath from "@/components/LearningPath";
+import CodeEditor from "@/components/CodeEditor";
+import PlayerStats from "@/components/PlayerStats";
 import { Separator } from "@/components/ui/separator";
 
 const Index = () => {
@@ -86,39 +86,31 @@ const Index = () => {
   const achievements = [
     {
       id: 1,
-      name: "First Steps",
-      description: "Complete your first challenge",
+      title: "First Steps",
       icon: <BadgeCheck className="h-8 w-8 text-quest-primary" />,
-      earned: true,
-      progress: 100,
-      maxProgress: 100,
+      unlocked: true,
     },
     {
       id: 2,
-      name: "Streak Master",
-      description: "Maintain a 7-day learning streak",
+      title: "Streak Master",
       icon: <Zap className="h-8 w-8 text-quest-warning" />,
-      earned: true,
-      progress: 100,
-      maxProgress: 100,
+      unlocked: true,
     },
     {
       id: 3,
-      name: "Code Explorer",
-      description: "Try challenges in 5 different programming languages",
+      title: "Code Explorer",
       icon: <Code className="h-8 w-8 text-quest-accent" />,
-      earned: false,
+      unlocked: false,
       progress: 2,
-      maxProgress: 5,
+      totalRequired: 5,
     },
     {
       id: 4,
-      name: "Algorithm Expert",
-      description: "Complete 10 algorithm challenges",
-      icon: <PuzzlePiece className="h-8 w-8 text-quest-secondary" />,
-      earned: false,
+      title: "Algorithm Expert",
+      icon: <CodeXml className="h-8 w-8 text-quest-secondary" />,
+      unlocked: false,
       progress: 3,
-      maxProgress: 10,
+      totalRequired: 10,
     },
   ];
 
@@ -126,30 +118,33 @@ const Index = () => {
   const learningPaths = [
     {
       id: 1,
-      title: "JavaScript Fundamentals",
-      description: "Master the basics of JavaScript programming",
-      progress: 65,
-      totalChallenges: 12,
-      completedChallenges: 8,
-      icon: <Code className="h-8 w-8" />,
+      pathName: "JavaScript Fundamentals",
+      steps: [
+        { id: 1, title: "Variables & Data Types", completed: true, locked: false },
+        { id: 2, title: "Functions & Scope", completed: true, locked: false },
+        { id: 3, title: "Arrays & Objects", completed: false, locked: false },
+        { id: 4, title: "DOM Manipulation", completed: false, locked: true },
+      ]
     },
     {
       id: 2,
-      title: "React Development",
-      description: "Learn to build interactive UIs with React",
-      progress: 30,
-      totalChallenges: 10,
-      completedChallenges: 3,
-      icon: <CodeXml className="h-8 w-8" />,
+      pathName: "React Development",
+      steps: [
+        { id: 1, title: "JSX Basics", completed: true, locked: false },
+        { id: 2, title: "Component Structure", completed: false, locked: false },
+        { id: 3, title: "State & Props", completed: false, locked: false },
+        { id: 4, title: "Hooks & Context", completed: false, locked: true },
+      ]
     },
     {
       id: 3,
-      title: "Backend with Node.js",
-      description: "Create server-side applications with Node.js",
-      progress: 10,
-      totalChallenges: 8,
-      completedChallenges: 1,
-      icon: <Terminal className="h-8 w-8" />,
+      pathName: "Backend with Node.js",
+      steps: [
+        { id: 1, title: "Node.js Basics", completed: true, locked: false },
+        { id: 2, title: "Express Routing", completed: false, locked: false },
+        { id: 3, title: "Middleware", completed: false, locked: true },
+        { id: 4, title: "Database Integration", completed: false, locked: true },
+      ]
     },
   ];
 
@@ -211,7 +206,14 @@ const Index = () => {
           </div>
           
           <div className="quest-card">
-            <PlayerStats />
+            <PlayerStats 
+              level={playerData.level}
+              xp={playerData.xp}
+              xpToNextLevel={playerData.xpToNextLevel}
+              completedChallenges={playerData.completedChallenges}
+              streak={playerData.streak}
+              learningDays={30}
+            />
           </div>
         </div>
         
@@ -244,7 +246,14 @@ const Index = () => {
           <TabsContent value="achievements" className="mt-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {achievements.map((achievement) => (
-                <AchievementBadge key={achievement.id} {...achievement} />
+                <AchievementBadge 
+                  key={achievement.id} 
+                  title={achievement.title}
+                  icon={achievement.icon}
+                  unlocked={achievement.unlocked}
+                  progress={achievement.progress}
+                  totalRequired={achievement.totalRequired}
+                />
               ))}
             </div>
           </TabsContent>
