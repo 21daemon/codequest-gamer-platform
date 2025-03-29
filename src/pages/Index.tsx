@@ -1,339 +1,281 @@
 
-import { useState } from 'react';
-import { Award, Book, Code, Gamepad, Terminal, Trophy, Zap, Star } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from "react";
+import CodeQuestHeader from "@/components/CodeQuestHeader";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ProgressBar from "@/components/ProgressBar";
+import { BadgeCheck, Code, CodeXml, Terminal, Trophy, Clock, BookOpen, Zap, FileBadge, PuzzlePiece } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ChallengeCard } from "@/components/ChallengeCard";
+import { AchievementBadge } from "@/components/AchievementBadge";
+import { LearningPath } from "@/components/LearningPath";
+import { CodeEditor } from "@/components/CodeEditor";
+import { PlayerStats } from "@/components/PlayerStats";
 import { Separator } from "@/components/ui/separator";
 
-import CodeQuestHeader from "@/components/CodeQuestHeader";
-import PlayerStats from "@/components/PlayerStats";
-import ChallengeCard from "@/components/ChallengeCard";
-import AchievementBadge from "@/components/AchievementBadge";
-import CodeEditor from "@/components/CodeEditor";
-import LearningPath from "@/components/LearningPath";
-
 const Index = () => {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState("challenges");
 
-  // Mock data for the learning paths
-  const learningPaths = [
-    {
-      id: 1,
-      name: "JavaScript Fundamentals",
-      steps: [
-        { id: 1, title: "Variables & Data Types", completed: true, locked: false },
-        { id: 2, title: "Operators & Expressions", completed: true, locked: false },
-        { id: 3, title: "Control Flow", completed: false, locked: false },
-        { id: 4, title: "Functions", completed: false, locked: false },
-        { id: 5, title: "Arrays & Objects", completed: false, locked: true },
-      ]
-    },
-    {
-      id: 2,
-      name: "Python Basics",
-      steps: [
-        { id: 1, title: "Getting Started", completed: true, locked: false },
-        { id: 2, title: "Variables & Types", completed: false, locked: false },
-        { id: 3, title: "Lists & Tuples", completed: false, locked: true },
-        { id: 4, title: "Conditionals", completed: false, locked: true },
-        { id: 5, title: "Loops", completed: false, locked: true },
-      ]
-    }
-  ];
+  // Sample player data
+  const playerData = {
+    name: "CodeWizard42",
+    level: 7,
+    xp: 3240,
+    xpToNextLevel: 4000,
+    streak: 12,
+    achievements: 8,
+    completedChallenges: 23,
+  };
 
-  // Mock data for the challenges
+  // Sample challenges data
   const challenges = [
     {
       id: 1,
-      title: "String Reversal",
-      description: "Create a function that reverses a string without using built-in reverse()",
-      difficulty: "Beginner",
+      title: "Hello World Function",
+      description: "Create a function that returns 'Hello, World!'",
+      difficulty: "Beginner" as "Beginner" | "Intermediate" | "Advanced",
       xpReward: 50,
       completed: true,
       locked: false,
-      language: "JavaScript"
+      language: "javascript",
     },
     {
       id: 2,
-      title: "FizzBuzz Challenge",
-      description: "Solve the classic FizzBuzz programming problem",
-      difficulty: "Beginner",
+      title: "Array Manipulation",
+      description: "Filter an array of numbers to return only even values",
+      difficulty: "Beginner" as "Beginner" | "Intermediate" | "Advanced",
       xpReward: 75,
-      completed: false,
+      completed: true,
       locked: false,
-      language: "JavaScript"
+      language: "javascript",
     },
     {
       id: 3,
-      title: "Palindrome Checker",
-      description: "Check if a string is a palindrome (reads the same forwards and backwards)",
-      difficulty: "Beginner",
-      xpReward: 100,
+      title: "API Data Fetching",
+      description: "Create a function to fetch and display user data from an API",
+      difficulty: "Intermediate" as "Beginner" | "Intermediate" | "Advanced",
+      xpReward: 150,
       completed: false,
       locked: false,
-      language: "JavaScript"
+      language: "javascript",
     },
     {
       id: 4,
-      title: "Array Filtering",
-      description: "Filter an array based on specific criteria without using built-in methods",
-      difficulty: "Intermediate",
-      xpReward: 150,
+      title: "Build a Todo App",
+      description: "Create a simple todo application with React",
+      difficulty: "Intermediate" as "Beginner" | "Intermediate" | "Advanced",
+      xpReward: 200,
+      completed: false,
+      locked: false,
+      language: "react",
+    },
+    {
+      id: 5,
+      title: "State Management",
+      description: "Implement global state management in a React application",
+      difficulty: "Advanced" as "Beginner" | "Intermediate" | "Advanced",
+      xpReward: 250,
       completed: false,
       locked: true,
-      language: "JavaScript"
-    }
+      language: "react",
+    },
+  ];
+
+  // Sample achievements data
+  const achievements = [
+    {
+      id: 1,
+      name: "First Steps",
+      description: "Complete your first challenge",
+      icon: <BadgeCheck className="h-8 w-8 text-quest-primary" />,
+      earned: true,
+      progress: 100,
+      maxProgress: 100,
+    },
+    {
+      id: 2,
+      name: "Streak Master",
+      description: "Maintain a 7-day learning streak",
+      icon: <Zap className="h-8 w-8 text-quest-warning" />,
+      earned: true,
+      progress: 100,
+      maxProgress: 100,
+    },
+    {
+      id: 3,
+      name: "Code Explorer",
+      description: "Try challenges in 5 different programming languages",
+      icon: <Code className="h-8 w-8 text-quest-accent" />,
+      earned: false,
+      progress: 2,
+      maxProgress: 5,
+    },
+    {
+      id: 4,
+      name: "Algorithm Expert",
+      description: "Complete 10 algorithm challenges",
+      icon: <PuzzlePiece className="h-8 w-8 text-quest-secondary" />,
+      earned: false,
+      progress: 3,
+      maxProgress: 10,
+    },
+  ];
+
+  // Sample learning paths
+  const learningPaths = [
+    {
+      id: 1,
+      title: "JavaScript Fundamentals",
+      description: "Master the basics of JavaScript programming",
+      progress: 65,
+      totalChallenges: 12,
+      completedChallenges: 8,
+      icon: <Code className="h-8 w-8" />,
+    },
+    {
+      id: 2,
+      title: "React Development",
+      description: "Learn to build interactive UIs with React",
+      progress: 30,
+      totalChallenges: 10,
+      completedChallenges: 3,
+      icon: <CodeXml className="h-8 w-8" />,
+    },
+    {
+      id: 3,
+      title: "Backend with Node.js",
+      description: "Create server-side applications with Node.js",
+      progress: 10,
+      totalChallenges: 8,
+      completedChallenges: 1,
+      icon: <Terminal className="h-8 w-8" />,
+    },
   ];
 
   return (
-    <div className="min-h-screen bg-dark-gradient text-white flex flex-col">
+    <div className="min-h-screen bg-dark-gradient text-foreground">
       <CodeQuestHeader />
-      
-      <main className="flex-1 container mx-auto px-4 py-6 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {/* Sidebar */}
-          <div className="md:col-span-1 space-y-6">
-            <div className="quest-card animate-scale-fade-in">
-              <div className="flex flex-col items-center">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-r from-quest-primary to-quest-secondary flex items-center justify-center text-white text-2xl font-bold mb-2 animate-pulse-glow">
-                  PL
+      <main className="container mx-auto px-4 py-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="md:col-span-2">
+            <div className="quest-card flex flex-col md:flex-row items-center md:items-start gap-4 mb-6">
+              <Avatar className="w-20 h-20 border-4 border-quest-primary">
+                <AvatarImage src="" alt="Player Avatar" />
+                <AvatarFallback className="bg-quest-primary text-xl">
+                  {playerData.name.substring(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              
+              <div className="flex-1">
+                <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-2">
+                  <h2 className="text-2xl font-bold">{playerData.name}</h2>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-quest-primary px-2 py-1">
+                      <Zap className="mr-1 h-3 w-3" />
+                      Level {playerData.level}
+                    </Badge>
+                    <Badge className="bg-quest-secondary px-2 py-1">
+                      <Clock className="mr-1 h-3 w-3" />
+                      {playerData.streak} Day Streak
+                    </Badge>
+                  </div>
                 </div>
-                <h2 className="text-xl font-bold">Player One</h2>
-                <p className="text-quest-light text-sm">Joined 7 days ago</p>
+                
+                <ProgressBar 
+                  value={playerData.xp} 
+                  maxValue={playerData.xpToNextLevel} 
+                  label="XP Progress" 
+                  className="mb-2" 
+                />
+                
+                <div className="grid grid-cols-3 gap-2 text-center">
+                  <div className="rounded-md bg-quest-card/50 p-2">
+                    <Trophy className="h-4 w-4 mx-auto mb-1 text-quest-accent" />
+                    <p className="text-xs text-muted-foreground">Achievements</p>
+                    <p className="font-bold">{playerData.achievements}</p>
+                  </div>
+                  <div className="rounded-md bg-quest-card/50 p-2">
+                    <CodeXml className="h-4 w-4 mx-auto mb-1 text-quest-primary" />
+                    <p className="text-xs text-muted-foreground">Completed</p>
+                    <p className="font-bold">{playerData.completedChallenges}</p>
+                  </div>
+                  <div className="rounded-md bg-quest-card/50 p-2">
+                    <BookOpen className="h-4 w-4 mx-auto mb-1 text-quest-secondary" />
+                    <p className="text-xs text-muted-foreground">Rank</p>
+                    <p className="font-bold">Silver</p>
+                  </div>
+                </div>
               </div>
-              
-              <Separator className="my-4" />
-              
-              <nav>
-                <ul className="space-y-1">
-                  <li>
-                    <Button 
-                      variant="ghost" 
-                      className={`w-full justify-start ${activeTab === 'dashboard' ? 'bg-quest-card' : ''}`}
-                      onClick={() => setActiveTab('dashboard')}
-                    >
-                      <Gamepad className="mr-2 h-4 w-4" />
-                      Dashboard
-                    </Button>
-                  </li>
-                  <li>
-                    <Button 
-                      variant="ghost" 
-                      className={`w-full justify-start ${activeTab === 'challenges' ? 'bg-quest-card' : ''}`}
-                      onClick={() => setActiveTab('challenges')}
-                    >
-                      <Code className="mr-2 h-4 w-4" />
-                      Challenges
-                    </Button>
-                  </li>
-                  <li>
-                    <Button 
-                      variant="ghost" 
-                      className={`w-full justify-start ${activeTab === 'achievements' ? 'bg-quest-card' : ''}`}
-                      onClick={() => setActiveTab('achievements')}
-                    >
-                      <Trophy className="mr-2 h-4 w-4" />
-                      Achievements
-                    </Button>
-                  </li>
-                  <li>
-                    <Button 
-                      variant="ghost" 
-                      className={`w-full justify-start ${activeTab === 'learning' ? 'bg-quest-card' : ''}`}
-                      onClick={() => setActiveTab('learning')}
-                    >
-                      <Book className="mr-2 h-4 w-4" />
-                      Learning Paths
-                    </Button>
-                  </li>
-                  <li>
-                    <Button 
-                      variant="ghost" 
-                      className={`w-full justify-start ${activeTab === 'playground' ? 'bg-quest-card' : ''}`}
-                      onClick={() => setActiveTab('playground')}
-                    >
-                      <Terminal className="mr-2 h-4 w-4" />
-                      Code Playground
-                    </Button>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-            
-            <div className="hidden md:block">
-              <Button className="w-full bg-quest-primary hover:bg-quest-primary/90">
-                <Zap className="mr-2 h-4 w-4" /> Daily Challenge
-              </Button>
             </div>
           </div>
           
-          {/* Main Content */}
-          <div className="md:col-span-3 space-y-6">
-            {activeTab === 'dashboard' && (
-              <>
-                <PlayerStats
-                  level={7}
-                  xp={320}
-                  xpToNextLevel={500}
-                  completedChallenges={12}
-                  streak={3}
-                  learningDays={7}
-                  className="animate-scale-fade-in"
-                />
-                
-                <div className="quest-card animate-scale-fade-in" style={{ animationDelay: "100ms" }}>
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold flex items-center">
-                      <Zap className="text-quest-accent mr-2 h-5 w-5" /> Popular Challenges
-                    </h3>
-                    <Button variant="link" className="text-quest-primary p-0">
-                      View All
-                    </Button>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {challenges.slice(0, 4).map(challenge => (
-                      <ChallengeCard
-                        key={challenge.id}
-                        {...challenge}
-                        onClick={() => setActiveTab('playground')}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </>
-            )}
-            
-            {activeTab === 'challenges' && (
-              <div className="quest-card animate-scale-fade-in">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold">Coding Challenges</h2>
-                  <div className="flex">
-                    <Button variant="outline" size="sm" className="mr-2">
-                      Filter
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      Sort
-                    </Button>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {challenges.map((challenge) => (
-                    <ChallengeCard
-                      key={challenge.id}
-                      {...challenge}
-                      onClick={() => setActiveTab('playground')}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {activeTab === 'achievements' && (
-              <div className="quest-card animate-scale-fade-in">
-                <h2 className="text-xl font-bold mb-6">Your Achievements</h2>
-                
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-                  <AchievementBadge 
-                    title="First Code" 
-                    icon={<Code size={20} />} 
-                    unlocked={true} 
-                  />
-                  <AchievementBadge 
-                    title="Streak Master" 
-                    icon={<Zap size={20} />} 
-                    unlocked={true} 
-                  />
-                  <AchievementBadge 
-                    title="Quick Learner" 
-                    icon={<Book size={20} />} 
-                    unlocked={true} 
-                  />
-                  <AchievementBadge 
-                    title="Bug Hunter" 
-                    icon={<Terminal size={20} />} 
-                    progress={3} 
-                    totalRequired={5} 
-                  />
-                  <AchievementBadge 
-                    title="JavaScript Pro" 
-                    icon={<Award size={20} />} 
-                    progress={2} 
-                    totalRequired={10} 
-                  />
-                  <AchievementBadge 
-                    title="Community Helper" 
-                    icon={<Star size={20} />} 
-                    progress={0} 
-                    totalRequired={5} 
-                  />
-                </div>
-              </div>
-            )}
-            
-            {activeTab === 'learning' && (
-              <div className="space-y-6 animate-scale-fade-in">
-                <h2 className="text-xl font-bold">Learning Paths</h2>
-                
-                {learningPaths.map(path => (
-                  <LearningPath 
-                    key={path.id}
-                    pathName={path.name}
-                    steps={path.steps}
-                  />
-                ))}
-              </div>
-            )}
-            
-            {activeTab === 'playground' && (
-              <div className="h-[calc(100vh-12rem)] animate-scale-fade-in">
-                <Tabs defaultValue="challenge" className="h-full space-y-6">
-                  <div className="flex justify-between items-center">
-                    <TabsList>
-                      <TabsTrigger value="challenge">Challenge: FizzBuzz</TabsTrigger>
-                      <TabsTrigger value="playground">Free Playground</TabsTrigger>
-                    </TabsList>
-                    <Button variant="outline" size="sm">
-                      Submit Solution
-                    </Button>
-                  </div>
-                  
-                  <TabsContent value="challenge" className="h-[calc(100%-3rem)] space-y-4 mt-0">
-                    <div className="quest-card mb-4">
-                      <h3 className="font-bold mb-2">FizzBuzz Challenge</h3>
-                      <p className="text-sm mb-4">
-                        Write a function that prints numbers from 1 to n. For multiples of 3, print "Fizz" instead of the number. 
-                        For multiples of 5, print "Buzz". For numbers that are multiples of both 3 and 5, print "FizzBuzz".
-                      </p>
-                      <div className="text-sm bg-quest-dark rounded p-3 mb-2">
-                        <pre className="font-mono">
-{`// Example:
-// n = 15
-// Output: 1, 2, Fizz, 4, Buzz, Fizz, 7, 8, Fizz, Buzz, 11, Fizz, 13, 14, FizzBuzz`}
-                        </pre>
-                      </div>
-                    </div>
-                    
-                    <CodeEditor
-                      initialCode={`function fizzBuzz(n) {
-  // Your code here
-  
-}
-
-// Test your function
-fizzBuzz(15);`}
-                    />
-                  </TabsContent>
-                  
-                  <TabsContent value="playground" className="h-[calc(100%-3rem)] mt-0">
-                    <CodeEditor initialCode="// Free coding playground\n\n" />
-                  </TabsContent>
-                </Tabs>
-              </div>
-            )}
+          <div className="quest-card">
+            <PlayerStats />
           </div>
         </div>
+        
+        <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="challenges">Challenges</TabsTrigger>
+            <TabsTrigger value="achievements">Achievements</TabsTrigger>
+            <TabsTrigger value="learning">Learning Paths</TabsTrigger>
+            <TabsTrigger value="playground">Code Playground</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="challenges" className="mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {challenges.map((challenge) => (
+                <ChallengeCard
+                  key={challenge.id}
+                  onClick={() => console.log(`Challenge ${challenge.id} clicked`)}
+                  {...challenge}
+                />
+              ))}
+            </div>
+            <div className="mt-8 text-center">
+              <Button className="bg-quest-secondary hover:bg-quest-secondary/90">
+                <FileBadge className="mr-2 h-4 w-4" />
+                Browse All Challenges
+              </Button>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="achievements" className="mt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {achievements.map((achievement) => (
+                <AchievementBadge key={achievement.id} {...achievement} />
+              ))}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="learning" className="mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {learningPaths.map((path) => (
+                <LearningPath key={path.id} {...path} />
+              ))}
+            </div>
+            <div className="mt-8 text-center">
+              <Button className="bg-quest-primary hover:bg-quest-primary/90">
+                <BookOpen className="mr-2 h-4 w-4" />
+                Explore All Learning Paths
+              </Button>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="playground" className="mt-6">
+            <div className="quest-card p-0 overflow-hidden">
+              <CodeEditor height="400px" language="javascript" defaultValue={`// Welcome to the CodeQuest Playground!
+// Start typing your code here...
+
+function greetUser(name) {
+  return \`Hello, \${name}! Welcome to CodeQuest.\`;
+}
+
+console.log(greetUser("Coder"));`} />
+            </div>
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );

@@ -95,4 +95,8 @@
   .quest-hover-card {
     @apply transition-all duration-200 hover:-translate-y-1 hover:shadow-md;
   }
+  
+  .hover-scale {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
+  }
 }
