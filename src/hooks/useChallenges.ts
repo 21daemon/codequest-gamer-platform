@@ -39,13 +39,18 @@ export const useChallenges = () => {
         } else if (completedChallenges) {
           // Mark challenges as completed if they're in the completed list
           const completedIds = completedChallenges.map(c => c.challenge_id);
-          challengesData.forEach(challenge => {
-            challenge.completed = completedIds.includes(challenge.id);
-          });
+          return challengesData.map(challenge => ({
+            ...challenge,
+            completed: completedIds.includes(challenge.id)
+          }));
         }
       }
 
-      return challengesData as Challenge[];
+      // If not authenticated or no completed challenges, return challenges without completed flag
+      return challengesData.map(challenge => ({
+        ...challenge,
+        completed: false
+      }));
     },
     enabled: true, // Always fetch challenges, even if not logged in
   });
@@ -84,13 +89,13 @@ export const useChallenges = () => {
         .insert({
           challenge_id: challengeId,
           code,
-          xp_earned: xpEarned,
-          user_id: user.id
+          user_id: user.id,
+          xp_earned: xpEarned
         });
 
       if (insertError) throw insertError;
 
-      // Then update user's XP in profile
+      // Then update user's XP in profile using the new function
       const { error: updateError } = await supabase
         .rpc('increment_user_xp', { 
           user_id_param: user.id,
