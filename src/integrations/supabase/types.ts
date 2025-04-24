@@ -9,7 +9,191 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      challenges: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          difficulty: string
+          id: number
+          points: number
+          solution_code: string | null
+          starter_code: string | null
+          test_cases: Json | null
+          title: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description: string
+          difficulty: string
+          id?: number
+          points?: number
+          solution_code?: string | null
+          starter_code?: string | null
+          test_cases?: Json | null
+          title: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          difficulty?: string
+          id?: number
+          points?: number
+          solution_code?: string | null
+          starter_code?: string | null
+          test_cases?: Json | null
+          title?: string
+        }
+        Relationships: []
+      }
+      completed_challenges: {
+        Row: {
+          challenge_id: number
+          code: string | null
+          completed_at: string
+          id: string
+          user_id: string
+          xp_earned: number
+        }
+        Insert: {
+          challenge_id: number
+          code?: string | null
+          completed_at?: string
+          id?: string
+          user_id: string
+          xp_earned?: number
+        }
+        Update: {
+          challenge_id?: number
+          code?: string | null
+          completed_at?: string
+          id?: string
+          user_id?: string
+          xp_earned?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "completed_challenges_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      learning_paths: {
+        Row: {
+          created_at: string
+          description: string
+          duration: string
+          id: number
+          image_url: string | null
+          level: string
+          modules: number
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          duration: string
+          id?: number
+          image_url?: string | null
+          level: string
+          modules?: number
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          duration?: string
+          id?: number
+          image_url?: string | null
+          level?: string
+          modules?: number
+          title?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          id: string
+          level: number
+          streak_days: number
+          streak_last_active: string | null
+          updated_at: string
+          username: string
+          xp: number
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          id: string
+          level?: number
+          streak_days?: number
+          streak_last_active?: string | null
+          updated_at?: string
+          username: string
+          xp?: number
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          id?: string
+          level?: number
+          streak_days?: number
+          streak_last_active?: string | null
+          updated_at?: string
+          username?: string
+          xp?: number
+        }
+        Relationships: []
+      }
+      user_learning_paths: {
+        Row: {
+          id: string
+          last_active_at: string
+          learning_path_id: number
+          progress: number
+          started_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          last_active_at?: string
+          learning_path_id: number
+          progress?: number
+          started_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          last_active_at?: string
+          learning_path_id?: number
+          progress?: number
+          started_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_learning_paths_learning_path_id_fkey"
+            columns: ["learning_path_id"]
+            isOneToOne: false
+            referencedRelation: "learning_paths"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_learning_paths_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

@@ -1,37 +1,20 @@
 
-import { Trophy, Zap, Book, Clock } from "lucide-react";
+import { Trophy, Zap, Book } from "lucide-react";
 import ProgressBar from "./ProgressBar";
 import { cn } from "@/lib/utils";
+import type { PlayerStats as PlayerStatsType, PlayerStatsProps } from "@/types/components";
 
-interface PlayerStatsProps {
-  level: number;
-  xp: number;
-  xpToNextLevel: number;
-  completedChallenges: number;
-  streak: number;
-  learningDays: number;
-  className?: string;
-}
-
-const PlayerStats = ({
-  level,
-  xp,
-  xpToNextLevel,
-  completedChallenges,
-  streak,
-  learningDays,
-  className,
-}: PlayerStatsProps) => {
+const PlayerStats = ({ stats, className }: PlayerStatsProps) => {
   return (
     <div className={cn("quest-card space-y-4", className)}>
       <div className="flex items-center justify-between">
         <h3 className="font-bold">Your Progress</h3>
-        <div className="text-lg font-bold text-quest-primary">Level {level}</div>
+        <div className="text-lg font-bold text-quest-primary">Level {stats.level}</div>
       </div>
       
       <ProgressBar
-        value={xp}
-        maxValue={xpToNextLevel}
+        value={stats.xp}
+        maxValue={stats.xpToNextLevel}
         label="Experience"
       />
       
@@ -42,7 +25,7 @@ const PlayerStats = ({
           </div>
           <div>
             <div className="text-quest-light text-xs">Challenges</div>
-            <div className="font-medium">{completedChallenges}</div>
+            <div className="font-medium">{stats.completedChallenges}</div>
           </div>
         </div>
         
@@ -52,17 +35,17 @@ const PlayerStats = ({
           </div>
           <div>
             <div className="text-quest-light text-xs">Current Streak</div>
-            <div className="font-medium">{streak} days</div>
+            <div className="font-medium">{stats.streak} days</div>
           </div>
         </div>
         
         <div className="flex items-center">
           <div className="rounded-full bg-quest-accent/20 p-2 mr-3">
-            <Clock size={18} className="text-quest-accent" />
+            <Book size={18} className="text-quest-accent" />
           </div>
           <div>
             <div className="text-quest-light text-xs">Learning Time</div>
-            <div className="font-medium">{learningDays} days</div>
+            <div className="font-medium">{stats.learningDays} days</div>
           </div>
         </div>
       </div>

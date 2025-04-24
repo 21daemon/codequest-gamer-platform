@@ -1,30 +1,12 @@
 
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { LockIcon, PlayIcon, CheckIcon } from "lucide-react";
-
-interface ChallengeCardProps {
-  title: string;
-  description: string;
-  difficulty: "Beginner" | "Intermediate" | "Advanced";
-  xpReward: number;
-  completed?: boolean;
-  locked?: boolean;
-  language: string;
-  onClick?: () => void;
-  className?: string;
-}
+import { PlayIcon, CheckIcon } from "lucide-react";
+import type { ChallengeCardProps } from "@/types/components";
 
 const ChallengeCard = ({
-  title,
-  description,
-  difficulty,
-  xpReward,
-  completed = false,
-  locked = false,
-  language,
-  onClick,
-  className,
+  challenge,
+  onSelect,
 }: ChallengeCardProps) => {
   const difficultyColor = {
     Beginner: "bg-green-500",
@@ -46,28 +28,20 @@ const ChallengeCard = ({
     <div
       className={cn(
         "quest-card quest-hover-card group relative", 
-        locked ? "opacity-60 grayscale" : "hover:border-quest-primary cursor-pointer",
-        completed ? "border-quest-success" : "",
-        className
+        challenge.completed ? "border-quest-success" : "hover:border-quest-primary cursor-pointer"
       )}
-      onClick={locked ? undefined : onClick}
+      onClick={() => onSelect?.(challenge)}
     >
-      {locked && (
-        <div className="absolute inset-0 flex items-center justify-center bg-quest-dark/70 rounded-lg">
-          <LockIcon size={32} className="text-white" />
-        </div>
-      )}
-      
       <div className="flex justify-between items-start mb-2">
         <div>
-          <h3 className="text-lg font-bold mb-2">{title}</h3>
-          <Badge className={difficultyColor[difficulty]}>{difficulty}</Badge>
-          <Badge variant="outline" className={cn("ml-2", languageColors[language] || "bg-gray-500")}>
-            {language}
+          <h3 className="text-lg font-bold mb-2">{challenge.title}</h3>
+          <Badge className={difficultyColor[challenge.difficulty]}>{challenge.difficulty}</Badge>
+          <Badge variant="outline" className={cn("ml-2", languageColors[challenge.category] || "bg-gray-500")}>
+            {challenge.category}
           </Badge>
         </div>
         <div className="flex items-center gap-2">
-          {completed ? (
+          {challenge.completed ? (
             <div className="rounded-full bg-quest-success p-1.5">
               <CheckIcon size={16} />
             </div>
@@ -79,11 +53,11 @@ const ChallengeCard = ({
         </div>
       </div>
       
-      <p className="text-sm text-muted-foreground mb-3">{description}</p>
+      <p className="text-sm text-muted-foreground mb-3">{challenge.description}</p>
       
       <div className="flex justify-between items-center text-sm">
-        <span className="text-quest-accent font-medium">{xpReward} XP</span>
-        {completed && <span className="text-quest-success">Completed</span>}
+        <span className="text-quest-accent font-medium">{challenge.points} XP</span>
+        {challenge.completed && <span className="text-quest-success">Completed</span>}
       </div>
     </div>
   );

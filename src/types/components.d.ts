@@ -1,12 +1,18 @@
 
 import { LucideIcon } from 'lucide-react';
 
+export interface PlayerStats {
+  level: number;
+  xp: number;
+  xpToNextLevel: number;
+  completedChallenges: number;
+  streak: number;
+  learningDays: number;
+}
+
 export interface PlayerStatsProps {
-  stat: {
-    label: string;
-    value: number;
-    icon: LucideIcon;
-  };
+  stats: PlayerStats;
+  className?: string;
 }
 
 export interface Challenge {
@@ -16,12 +22,15 @@ export interface Challenge {
   difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
   category: string;
   points: number;
-  completionRate: number;
-  isCompleted?: boolean;
+  starter_code?: string;
+  solution_code?: string;
+  test_cases?: any;
+  completed?: boolean;
 }
 
 export interface ChallengeCardProps {
-  item: Challenge;
+  challenge: Challenge;
+  onSelect?: (challenge: Challenge) => void;
 }
 
 export interface LearningPathData {
@@ -31,15 +40,18 @@ export interface LearningPathData {
   level: string;
   modules: number;
   duration: string;
-  progress: number;
-  image?: string;
+  progress?: number;
+  image_url?: string;
 }
 
 export interface LearningPathProps {
-  data: LearningPathData;
+  learningPath: LearningPathData;
 }
 
 export interface CodeEditorProps {
-  code: string;
+  initialCode: string;
   language: string;
+  onRun?: (code: string) => void;
+  onReset?: () => void;
+  className?: string;
 }
