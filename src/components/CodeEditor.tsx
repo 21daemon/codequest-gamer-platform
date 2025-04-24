@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { PlayIcon, RefreshCw } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { executeCode } from '@/utils/codeExecutor';
+import { toast } from '@/hooks/use-toast';
 
 interface CodeEditorProps {
   initialCode?: string;
@@ -10,6 +12,7 @@ interface CodeEditorProps {
   onRun?: (code: string) => void;
   onReset?: () => void;
   className?: string;
+  testCases?: any[];
 }
 
 const CodeEditor = ({
@@ -18,20 +21,35 @@ const CodeEditor = ({
   onRun,
   onReset,
   className,
+  testCases,
 }: CodeEditorProps) => {
   const [code, setCode] = useState(initialCode);
   const [output, setOutput] = useState<string[]>([]);
   
   const handleRunCode = () => {
-    // In a real app, this would evaluate the code safely or send to a backend
-    setOutput([
-      '> Running code...',
-      '> Hello, CodeQuest!',
-      '> Execution completed successfully'
-    ]);
-    
-    if (onRun) {
-      onRun(code);
+    try {
+      const result = executeCode(code);
+      
+      setOutput([
+        '> Running code...',
+        ...(result.output || []),
+        result.error ? `> Error: ${result.error}` : '> Execution completed successfully'
+      ]);
+      
+      if (!result.error && onRun) {
+        onRun(code);
+      }
+    } catch (error) {
+      setOutput([
+        '> Error executing code:',
+        `> ${error instanceof Error ? error.message : 'Unknown error occurred'}`
+      ]);
+      
+      toast({
+        variant: "destructive",
+        title: "Code execution failed",
+        description: error instanceof Error ? error.message : "An error occurred while running your code",
+      });
     }
   };
   
@@ -87,7 +105,7 @@ const CodeEditor = ({
             {output.length > 0 ? (
               output.map((line, index) => (
                 <div key={index} className="mb-1">
-                  <span className={line.startsWith('> Error:') ? 'text-quest-error' : 'text-green-400'}>
+                  <span className={line.startsWith('> Error') ? 'text-quest-error' : 'text-green-400'}>
                     {line}
                   </span>
                 </div>
