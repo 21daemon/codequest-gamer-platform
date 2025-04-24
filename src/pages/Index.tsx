@@ -11,27 +11,18 @@ import PlayerStats from "@/components/PlayerStats";
 import ChallengeCard from "@/components/ChallengeCard";
 import CodeEditor from "@/components/CodeEditor";
 import LearningPath from "@/components/LearningPath";
-import { Challenge, LearningPathData } from "@/types/components";
+import { Challenge, LearningPathData, PlayerStats as PlayerStatsType } from "@/types/components";
 
 const Index = () => {
   // Sample data for player stats
-  const playerStats = [
-    {
-      label: "Completed Challenges",
-      value: 24,
-      icon: Trophy
-    },
-    {
-      label: "Current Streak",
-      value: 7,
-      icon: Gamepad2
-    },
-    {
-      label: "Total Points",
-      value: 4250,
-      icon: Star
-    }
-  ];
+  const playerStats: PlayerStatsType = {
+    level: 5,
+    xp: 750,
+    xpToNextLevel: 1000,
+    completedChallenges: 24,
+    streak: 7,
+    learningDays: 35
+  };
 
   // Sample data for challenges
   const challenges: Challenge[] = [
@@ -42,8 +33,7 @@ const Index = () => {
       difficulty: "Intermediate",
       category: "React",
       points: 150,
-      completionRate: 65,
-      isCompleted: true
+      completed: true
     },
     {
       id: 2,
@@ -51,8 +41,7 @@ const Index = () => {
       description: "Master asynchronous JavaScript with Promises and async/await.",
       difficulty: "Intermediate",
       category: "JavaScript",
-      points: 125,
-      completionRate: 48
+      points: 125
     },
     {
       id: 3,
@@ -60,8 +49,7 @@ const Index = () => {
       description: "Build responsive layouts using CSS Grid.",
       difficulty: "Beginner",
       category: "CSS",
-      points: 75,
-      completionRate: 89
+      points: 75
     },
     {
       id: 4,
@@ -69,8 +57,7 @@ const Index = () => {
       description: "Deep dive into TypeScript generics and advanced types.",
       difficulty: "Advanced",
       category: "TypeScript",
-      points: 200,
-      completionRate: 32
+      points: 200
     }
   ];
 
@@ -84,7 +71,7 @@ const Index = () => {
       modules: 12,
       duration: "8 weeks",
       progress: 45,
-      image: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
+      image_url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
     },
     {
       id: 2,
@@ -94,7 +81,7 @@ const Index = () => {
       modules: 15,
       duration: "10 weeks",
       progress: 20,
-      image: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
+      image_url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
     },
     {
       id: 3,
@@ -104,7 +91,7 @@ const Index = () => {
       modules: 8,
       duration: "6 weeks",
       progress: 10,
-      image: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg"
+      image_url: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg"
     }
   ];
 
@@ -128,11 +115,7 @@ console.log(greet('Developer'));`;
               <Separator className="bg-quest-card/80" />
             </div>
             
-            <div className="space-y-4">
-              {playerStats.map((stat, index) => (
-                <PlayerStats key={index} stat={stat} />
-              ))}
-            </div>
+            <PlayerStats stats={playerStats} />
 
             <Card className="bg-card-gradient border-quest-card/50">
               <CardContent className="p-4">
@@ -177,7 +160,7 @@ console.log(greet('Developer'));`;
               <TabsContent value="challenges" className="mt-6 space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {challenges.map((challenge) => (
-                    <ChallengeCard key={challenge.id} item={challenge} />
+                    <ChallengeCard key={challenge.id} challenge={challenge} />
                   ))}
                 </div>
                 
@@ -187,7 +170,7 @@ console.log(greet('Developer'));`;
                     <p className="text-muted-foreground mb-4">
                       Try out this JavaScript challenge. Edit the code and see the results in real-time.
                     </p>
-                    <CodeEditor code={sampleCode} language="javascript" />
+                    <CodeEditor initialCode={sampleCode} language="javascript" />
                     <div className="flex justify-end mt-4">
                       <Button className="bg-quest-secondary hover:bg-quest-secondary/90">
                         Run Code
@@ -201,7 +184,7 @@ console.log(greet('Developer'));`;
                 <ScrollArea className="h-[600px] pr-4">
                   <div className="space-y-4">
                     {learningPaths.map((path) => (
-                      <LearningPath key={path.id} data={path} />
+                      <LearningPath key={path.id} learningPath={path} />
                     ))}
                   </div>
                 </ScrollArea>

@@ -11,8 +11,7 @@ import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
-
-const queryClient = new QueryClient();
+import { useState } from "react";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => (
   <>
@@ -21,49 +20,54 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => (
   </>
 );
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route 
-              path="/dashboard" 
-              element={
+const App = () => {
+  // Create a new QueryClient instance inside the component
+  const [queryClient] = useState(() => new QueryClient());
+
+  return (
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route 
+                path="/dashboard" 
+                element={
+                  <MainLayout>
+                    <Index />
+                  </MainLayout>
+                } 
+              />
+              <Route 
+                path="/login" 
+                element={
+                  <MainLayout>
+                    <Login />
+                  </MainLayout>
+                } 
+              />
+              <Route 
+                path="/register" 
+                element={
+                  <MainLayout>
+                    <Register />
+                  </MainLayout>
+                } 
+              />
+              <Route path="*" element={
                 <MainLayout>
-                  <Index />
+                  <NotFound />
                 </MainLayout>
-              } 
-            />
-            <Route 
-              path="/login" 
-              element={
-                <MainLayout>
-                  <Login />
-                </MainLayout>
-              } 
-            />
-            <Route 
-              path="/register" 
-              element={
-                <MainLayout>
-                  <Register />
-                </MainLayout>
-              } 
-            />
-            <Route path="*" element={
-              <MainLayout>
-                <NotFound />
-              </MainLayout>
-            } />
-          </Routes>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+              } />
+            </Routes>
+          </AuthProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </BrowserRouter>
+  );
+};
 
 export default App;
