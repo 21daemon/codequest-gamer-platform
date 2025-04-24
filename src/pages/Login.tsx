@@ -1,12 +1,13 @@
 
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { EyeIcon, EyeOffIcon, ArrowLeft, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,9 +15,9 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const { toast } = useToast();
-  const navigate = useNavigate();
+  const { signIn, loading } = useAuth();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Basic validation
@@ -29,17 +30,12 @@ const Login = () => {
       return;
     }
     
-    // For demonstration, show success toast and redirect
-    // In a real app, you would authenticate with a server here
-    toast({
-      title: "Welcome back!",
-      description: "You've successfully logged in.",
-    });
-    
-    // Simulate login delay
-    setTimeout(() => {
-      navigate("/");
-    }, 1500);
+    try {
+      await signIn(email, password);
+    } catch (error) {
+      console.error("Login error:", error);
+      // Error is handled in the signIn function
+    }
   };
 
   return (
@@ -115,8 +111,13 @@ const Login = () => {
               </Link>
             </div>
             
-            <Button type="submit" className="w-full bg-quest-primary hover:bg-quest-primary/90">
-              <LogIn className="mr-2 h-4 w-4" /> Sign In
+            <Button 
+              type="submit" 
+              className="w-full bg-quest-primary hover:bg-quest-primary/90"
+              disabled={loading}
+            >
+              <LogIn className="mr-2 h-4 w-4" /> 
+              {loading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
           

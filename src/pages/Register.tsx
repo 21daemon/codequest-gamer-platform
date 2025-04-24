@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { EyeIcon, EyeOffIcon, ArrowLeft, User, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -18,7 +19,7 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
   const { toast } = useToast();
-  const navigate = useNavigate();
+  const { signUp, loading } = useAuth();
 
   // Password strength indicators
   const passwordHasMinLength = password.length >= 8;
@@ -27,7 +28,7 @@ const Register = () => {
   const passwordHasSpecial = /[^a-zA-Z0-9]/.test(password);
   const passwordsMatch = password && confirmPassword && password === confirmPassword;
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Basic validation
@@ -67,17 +68,12 @@ const Register = () => {
       return;
     }
     
-    // For demonstration, show success toast and redirect
-    // In a real app, you would register with a server here
-    toast({
-      title: "Registration successful!",
-      description: "Your account has been created.",
-    });
-    
-    // Simulate registration delay
-    setTimeout(() => {
-      navigate("/");
-    }, 1500);
+    try {
+      await signUp(email, password);
+    } catch (error) {
+      console.error("Registration error:", error);
+      // Error is handled in the signUp function
+    }
   };
 
   return (
@@ -227,8 +223,13 @@ const Register = () => {
               </Label>
             </div>
             
-            <Button type="submit" className="w-full bg-quest-primary hover:bg-quest-primary/90">
-              <User className="mr-2 h-4 w-4" /> Create Account
+            <Button 
+              type="submit" 
+              className="w-full bg-quest-primary hover:bg-quest-primary/90"
+              disabled={loading}
+            >
+              <User className="mr-2 h-4 w-4" /> 
+              {loading ? "Creating Account..." : "Create Account"}
             </Button>
           </form>
           
