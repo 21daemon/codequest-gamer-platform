@@ -3,9 +3,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { Challenge } from '@/types/components';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const useChallenges = () => {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   const { data: challenges, isLoading } = useQuery({
     queryKey: ['challenges'],
@@ -30,12 +32,17 @@ export const useChallenges = () => {
 
   const completeChallenge = useMutation({
     mutationFn: async ({ challengeId, code, xpEarned }: { challengeId: number, code: string, xpEarned: number }) => {
+      if (!user) {
+        throw new Error("You must be logged in to complete a challenge");
+      }
+
       const { error } = await supabase
         .from('completed_challenges')
         .insert({
           challenge_id: challengeId,
           code,
           xp_earned: xpEarned,
+          user_id: user.id
         });
 
       if (error) throw error;

@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
@@ -21,6 +22,15 @@ const Index = () => {
   };
 
   const handleRunCode = async (code: string) => {
+    if (!user) {
+      toast({
+        variant: "destructive",
+        title: "Authentication required",
+        description: "Please log in to complete challenges",
+      });
+      return;
+    }
+
     if (!selectedChallenge) {
       toast({
         title: "No challenge selected",
@@ -117,14 +127,16 @@ const Index = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {isLoading ? (
                     <p>Loading challenges...</p>
-                  ) : (
-                    challenges?.map((challenge) => (
+                  ) : challenges && challenges.length > 0 ? (
+                    challenges.map((challenge) => (
                       <ChallengeCard 
                         key={challenge.id} 
                         challenge={challenge}
                         onSelect={handleChallengeSelect}
                       />
                     ))
+                  ) : (
+                    <p>No challenges found.</p>
                   )}
                 </div>
                 
