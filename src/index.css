@@ -5,6 +5,166 @@
 
 @layer base {
   :root {
+    /* Enhanced Color Palette */
+    --background: 240 24% 8%;
+    --foreground: 240 5% 84%;
+    
+    --card: 240 24% 10%;
+    --card-foreground: 240 5% 84%;
+    
+    --popover: 240 24% 10%;
+    --popover-foreground: 240 5% 84%;
+    
+    --primary: 267 84% 81%;
+    --primary-foreground: 240 100% 9%;
+    
+    --secondary: 240 4% 16%;
+    --secondary-foreground: 240 5% 84%;
+    
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 4% 64%;
+    
+    --accent: 192 84% 61%;
+    --accent-foreground: 240 100% 9%;
+    
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 240 6% 20%;
+    --input: 240 6% 20%;
+    --ring: 267 84% 81%;
+    
+    --radius: 0.75rem;
+    
+    /* Gaming Theme Colors */
+    --quest-primary: 267 84% 81%;
+    --quest-secondary: 45 93% 58%;
+    --quest-accent: 192 84% 61%;
+    --quest-success: 142 76% 36%;
+    --quest-warning: 45 93% 58%;
+    --quest-danger: 0 63% 31%;
+    --quest-dark: 240 24% 8%;
+    --quest-light: 240 5% 84%;
+    --quest-card: 240 24% 10%;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--quest-primary)), hsl(var(--quest-accent)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--quest-secondary)), hsl(var(--quest-warning)));
+    --gradient-dark: linear-gradient(135deg, hsl(var(--background)), hsl(var(--card)));
+    
+    /* Shadows and Effects */
+    --shadow-glow: 0 0 30px hsl(var(--quest-primary) / 0.3);
+    --shadow-card: 0 8px 32px hsl(0 0% 0% / 0.3);
+    --shadow-button: 0 4px 16px hsl(var(--quest-primary) / 0.4);
+  }
+
+  .light {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 4%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 4%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 4%;
+    
+    --primary: 267 84% 81%;
+    --primary-foreground: 240 100% 9%;
+    
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 6% 10%;
+    
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
+    
+    --accent: 240 5% 96%;
+    --accent-foreground: 240 6% 10%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 267 84% 81%;
+    
+    /* Light mode gaming colors */
+    --quest-primary: 267 84% 65%;
+    --quest-secondary: 45 93% 47%;
+    --quest-accent: 192 84% 48%;
+    --quest-success: 142 76% 36%;
+    --quest-warning: 45 93% 47%;
+    --quest-danger: 0 63% 31%;
+    --quest-dark: 240 10% 4%;
+    --quest-light: 240 5% 96%;
+    --quest-card: 0 0% 100%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  .quest-card {
+    @apply bg-quest-card border border-border rounded-xl p-6 shadow-lg;
+  }
+  
+  .quest-hover-card {
+    @apply transition-all duration-300 hover:shadow-xl hover:shadow-primary/20 hover:scale-[1.02];
+  }
+  
+  .quest-gradient-text {
+    @apply bg-gradient-to-r from-quest-primary to-quest-accent bg-clip-text text-transparent;
+  }
+  
+  .quest-gradient-bg {
+    @apply bg-gradient-to-br from-quest-primary/20 via-quest-accent/10 to-transparent;
+  }
+  
+  .quest-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .quest-glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+  
+  .quest-button {
+    @apply bg-gradient-to-r from-quest-primary to-quest-accent text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95;
+  }
+}
+
+@layer utilities {
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse 3s ease-in-out infinite;
+  }
+  
+  .animate-bounce-slow {
+    animation: bounce 2s infinite;
+  }
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 20px hsl(var(--quest-primary) / 0.5);
+  }
+  to {
+    box-shadow: 0 0 40px hsl(var(--quest-primary) / 0.8);
+  }
+}
+
+@layer base {
+  :root {
     --background: 240 24% 13%;
     --foreground: 210 40% 98%;
 

@@ -19,13 +19,14 @@ export interface Challenge {
   id: number;
   title: string;
   description: string;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  difficulty: string;  // Changed from union type to string to match database
   category: string;
   points: number;
-  starter_code?: string;
-  solution_code?: string;
+  starter_code?: string | null;
+  solution_code?: string | null;
   test_cases?: any;
   completed?: boolean;
+  created_at?: string | null;
 }
 
 export interface ChallengeCardProps {
@@ -54,4 +55,6 @@ export interface CodeEditorProps {
   onRun?: (code: string) => void;
   onReset?: () => void;
   className?: string;
+  testCases?: any[];
+  challenge?: any;
 }

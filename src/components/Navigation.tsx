@@ -1,160 +1,159 @@
-
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import { Gamepad2, Code, Trophy, Book, Users } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Menu, Code, Trophy, BookOpen, User, Home, LogIn, UserPlus } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { cn } from '@/lib/utils';
 
-interface NavigationItemProps {
-  to: string;
-  label: string;
-  icon?: React.ReactNode;
-  mobile?: boolean;
-  isActive?: boolean;
-}
-
-const NavigationItem = ({ to, label, icon, mobile = false, isActive }: NavigationItemProps) => (
-  <li className={mobile ? 'py-2' : ''}>
-    <Link 
-      to={to} 
-      className={`text-quest-light hover:text-white transition-colors flex items-center gap-2 ${
-        mobile ? 'py-2 px-4 w-full' : ''
-      } ${isActive ? 'text-white font-medium' : ''}`}
-    >
-      {icon}
-      {label}
-    </Link>
-  </li>
-);
-
-interface NavigationProps {
-  isMenuOpen?: boolean;
-}
-
-const Navigation = ({ isMenuOpen }: NavigationProps) => {
-  const isMobile = useIsMobile();
+const Navigation = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { user, signOut } = useAuth();
   const location = useLocation();
 
-  const isActive = (path: string) => {
-    return location.pathname === path;
-  };
+  const navItems = [
+    { name: 'Home', href: '/', icon: Home },
+    { name: 'Dashboard', href: '/dashboard', icon: Code },
+    { name: 'Leaderboard', href: '/leaderboard', icon: Trophy },
+    { name: 'Learn', href: '/learn', icon: BookOpen },
+  ];
 
-  if (isMobile) {
-    return (
-      <nav className={`
-        absolute top-full left-0 w-full bg-quest-card/95 backdrop-blur-md border-b border-quest-card 
-        transition-all duration-300 transform ${isMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'}
-        z-20
-      `}>
-        <ul className="flex flex-col p-4">
-          <NavigationItem to="/dashboard" label="Challenges" icon={<Code size={18} />} mobile isActive={isActive('/dashboard')} />
-          <NavigationItem to="/leaderboard" label="Leaderboard" icon={<Trophy size={18} />} mobile isActive={isActive('/leaderboard')} />
-          <NavigationItem to="/community" label="Community" icon={<Users size={18} />} mobile isActive={isActive('/community')} />
-          <NavigationItem to="/resources" label="Resources" icon={<Book size={18} />} mobile isActive={isActive('/resources')} />
-        </ul>
-      </nav>
-    );
-  }
+  const isActive = (path: string) => location.pathname === path;
 
   return (
-    <NavigationMenu className="hidden md:flex">
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <Link to="/dashboard" className={cn(navigationMenuTriggerStyle(), "bg-transparent", isActive('/dashboard') ? "bg-quest-primary/20" : "")}>
-            <Gamepad2 className="mr-2 h-4 w-4" />
-            Challenges
+    <nav className="bg-quest-card/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex items-center justify-between">
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-2">
+            <div className="p-2 bg-gradient-to-r from-quest-primary to-quest-accent rounded-lg">
+              <Code className="h-6 w-6 text-white" />
+            </div>
+            <span className="text-xl font-bold quest-gradient-text">CodeQuest</span>
           </Link>
-        </NavigationMenuItem>
-        
-        <NavigationMenuItem>
-          <NavigationMenuTrigger className={cn("bg-transparent", isActive('/resources') ? "bg-quest-primary/20" : "")}>Resources</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-quest-card border border-quest-card/50">
-              <li className="row-span-3">
-                <NavigationMenuLink asChild>
-                  <a
-                    className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-quest-primary/50 to-quest-secondary/50 p-6 no-underline outline-none focus:shadow-md"
-                    href="/resources"
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-6">
+            {navItems.map((item) => (
+              <Link
+                key={item.name}
+                to={item.href}
+                className={cn(
+                  "flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-200",
+                  isActive(item.href)
+                    ? "bg-quest-primary/20 text-quest-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                )}
+              >
+                <item.icon className="h-4 w-4" />
+                <span>{item.name}</span>
+              </Link>
+            ))}
+          </div>
+
+          {/* Auth Buttons */}
+          <div className="hidden md:flex items-center space-x-4">
+            {user ? (
+              <div className="flex items-center space-x-4">
+                <Button variant="ghost" size="sm" className="flex items-center space-x-2">
+                  <User className="h-4 w-4" />
+                  <span>{user.email}</span>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={signOut}
+                  className="hover:bg-destructive hover:text-destructive-foreground"
+                >
+                  Sign Out
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Button asChild variant="ghost" size="sm">
+                  <Link to="/login" className="flex items-center space-x-2">
+                    <LogIn className="h-4 w-4" />
+                    <span>Sign In</span>
+                  </Link>
+                </Button>
+                <Button asChild size="sm" className="quest-button">
+                  <Link to="/register" className="flex items-center space-x-2">
+                    <UserPlus className="h-4 w-4" />
+                    <span>Sign Up</span>
+                  </Link>
+                </Button>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Menu */}
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild className="md:hidden">
+              <Button variant="ghost" size="icon">
+                <Menu className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+              <div className="flex flex-col space-y-4 mt-8">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className={cn(
+                      "flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200",
+                      isActive(item.href)
+                        ? "bg-quest-primary/20 text-quest-primary"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    )}
                   >
-                    <Book className="h-6 w-6 mb-2" />
-                    <div className="mb-2 mt-4 text-lg font-medium">
-                      Learning Paths
+                    <item.icon className="h-5 w-5" />
+                    <span className="text-lg">{item.name}</span>
+                  </Link>
+                ))}
+                
+                <div className="border-t border-border pt-4 mt-6">
+                  {user ? (
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-3 px-4 py-2">
+                        <User className="h-5 w-5" />
+                        <span className="text-sm text-muted-foreground">{user.email}</span>
+                      </div>
+                      <Button 
+                        variant="outline" 
+                        className="w-full justify-start"
+                        onClick={() => {
+                          signOut();
+                          setIsOpen(false);
+                        }}
+                      >
+                        Sign Out
+                      </Button>
                     </div>
-                    <p className="text-sm leading-tight text-muted-foreground">
-                      Structured learning journeys to master different programming technologies
-                    </p>
-                  </a>
-                </NavigationMenuLink>
-              </li>
-              <li>
-                <NavigationMenuLink asChild>
-                  <a
-                    href="/resources"
-                    className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                  >
-                    <div className="text-sm font-medium leading-none">Documentation</div>
-                    <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                      Official guides and API references
-                    </p>
-                  </a>
-                </NavigationMenuLink>
-              </li>
-              <li>
-                <NavigationMenuLink asChild>
-                  <a
-                    href="/resources"
-                    className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                  >
-                    <div className="text-sm font-medium leading-none">Tutorials</div>
-                    <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                      Step-by-step guides for beginners and experts
-                    </p>
-                  </a>
-                </NavigationMenuLink>
-              </li>
-              <li>
-                <NavigationMenuLink asChild>
-                  <a
-                    href="/resources"
-                    className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                  >
-                    <div className="text-sm font-medium leading-none">Blog</div>
-                    <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                      Latest news and articles from the CodeQuest team
-                    </p>
-                  </a>
-                </NavigationMenuLink>
-              </li>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-
-        <NavigationMenuItem>
-          <Link to="/leaderboard" className={cn(navigationMenuTriggerStyle(), "bg-transparent", isActive('/leaderboard') ? "bg-quest-primary/20" : "")}>
-            <Trophy className="mr-2 h-4 w-4" />
-            Leaderboard
-          </Link>
-        </NavigationMenuItem>
-
-        <NavigationMenuItem>
-          <Link to="/community" className={cn(navigationMenuTriggerStyle(), "bg-transparent", isActive('/community') ? "bg-quest-primary/20" : "")}>
-            <Users className="mr-2 h-4 w-4" />
-            Community
-          </Link>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+                  ) : (
+                    <div className="space-y-2">
+                      <Button asChild variant="ghost" className="w-full justify-start">
+                        <Link to="/login" onClick={() => setIsOpen(false)}>
+                          <LogIn className="h-4 w-4 mr-2" />
+                          Sign In
+                        </Link>
+                      </Button>
+                      <Button asChild className="w-full quest-button">
+                        <Link to="/register" onClick={() => setIsOpen(false)}>
+                          <UserPlus className="h-4 w-4 mr-2" />
+                          Sign Up
+                        </Link>
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </div>
+    </nav>
   );
 };
 
-export { Navigation, NavigationItem };
 export default Navigation;

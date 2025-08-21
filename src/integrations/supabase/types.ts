@@ -14,13 +14,122 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      challenges: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string
+          difficulty: string
+          id: number
+          points: number
+          solution_code: string | null
+          starter_code: string | null
+          test_cases: Json | null
+          title: string
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          description: string
+          difficulty: string
+          id?: number
+          points?: number
+          solution_code?: string | null
+          starter_code?: string | null
+          test_cases?: Json | null
+          title: string
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string
+          difficulty?: string
+          id?: number
+          points?: number
+          solution_code?: string | null
+          starter_code?: string | null
+          test_cases?: Json | null
+          title?: string
+        }
+        Relationships: []
+      }
+      completed_challenges: {
+        Row: {
+          challenge_id: number
+          code: string
+          completed_at: string | null
+          id: number
+          user_id: string
+          xp_earned: number
+        }
+        Insert: {
+          challenge_id: number
+          code: string
+          completed_at?: string | null
+          id?: number
+          user_id: string
+          xp_earned?: number
+        }
+        Update: {
+          challenge_id?: number
+          code?: string
+          completed_at?: string | null
+          id?: number
+          user_id?: string
+          xp_earned?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "completed_challenges_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          id: string
+          last_challenge_date: string | null
+          level: number
+          streak_days: number
+          updated_at: string | null
+          username: string | null
+          xp: number
+        }
+        Insert: {
+          created_at?: string | null
+          id: string
+          last_challenge_date?: string | null
+          level?: number
+          streak_days?: number
+          updated_at?: string | null
+          username?: string | null
+          xp?: number
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          last_challenge_date?: string | null
+          level?: number
+          streak_days?: number
+          updated_at?: string | null
+          username?: string | null
+          xp?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_user_xp: {
+        Args: { user_id_param: string; xp_amount: number }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
